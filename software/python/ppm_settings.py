@@ -28,3 +28,9 @@ demo = False
 
 # file with data used in demo mode
 sampledatafile = '20170910_151226_646_time_sample_data.txt'
+
+# switch on/off flag for ppm measurement
+ppm_on = True
+
+# switch on/off flag for temperature measurement
+t_on = True

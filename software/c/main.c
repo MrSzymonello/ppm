@@ -2,12 +2,14 @@
 #include "uart.h"
 #include "stdlib.h"
 #include "base64.h"
+#include "ds18b20.h"
 
 #define SAMPLESNO 20000
 #define SAMPLESSIZE 30000
 #define ADC_VALUE_MAX 0xFFF
 
-volatile uint8_t StartPPM =  0;
+volatile uint8_t StartPPM = 0;
+volatile uint8_t StartT = 0;
 volatile uint16_t ADC1 = 0;
 volatile uint16_t ADC2 = 0;
 volatile uint8_t ADCTab[SAMPLESSIZE];
@@ -68,6 +70,8 @@ int main (void)
 	char out[4];
 	char in[3];			
 
+	int16_t temperature = 0;
+
 	//setup SysTick Timer for 1 msec interrupts
 	SysTick_Config(SystemCoreClock / 1000);		
 	SystemInit();
@@ -76,6 +80,8 @@ int main (void)
 	config_Timer0();
 	config_ADC();
 	
+	DS18B20_Init();
+
 	LPC_TIM0->TCR = 0x2; //timer0 in reset mode
 	LPC_TIM0->TCR = 0; //timer0 disabled
 
@@ -114,7 +120,24 @@ int main (void)
 			//reset counters and flags
 			ADCTabCounter=0;
 			SamplesCounter=0;
+
 			StartPPM = 0;
+		}
+		else if(StartT == 1)
+		{
+			temperature=DS18B20_TemOut();
+			if(temperature < 0)
+			{
+				UART2_SendByte(45);	// -
+				temperature *= -1;
+			}
+			UART2_SendByte((temperature/1000)+48);
+			UART2_SendByte((uint32_t)(temperature/100)%10+48);
+			UART2_SendByte((uint32_t)(temperature/10)%10+48);
+			UART2_SendByte(temperature%10 + 48);
+			UART2_SendString("\r\n");
+
+			StartT = 0;
 		}
 
 		//look for incoming data via UART
@@ -127,7 +150,9 @@ int main (void)
 			}
 			while(LPC_UART2->LSR & 0x01);
 			   
-			if(UARTinputBuffer[0] == 'S') StartPPM = 1;
+			if(UARTinputBuffer[0] == 'S') StartPPM = 1;			
+			else if(UARTinputBuffer[0] == 'T') StartT = 1;
+
 			for(i=0; i< UARTcounter; i++)
 				UARTinputBuffer[i] = 0;
 			UARTcounter = 0;

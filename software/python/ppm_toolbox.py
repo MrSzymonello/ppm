@@ -124,7 +124,45 @@ def analyze_ppm(voltagesamples, samplerate, freqrange=[2125.0, 2135.0], fitrange
 				x0_error, f_error, t0_error, A_error, y0_error)
 
 
-def read_from_device_uart(baudrate, port, samplerate):
+def read_temperature_from_device_uart(baudrate, port):
+	"""This function triggers temperature measurement then returns result. Data transmission channel is uart.
+
+	Args:
+		baudrate (int): uart transmission speed
+		port (str): uart port
+	Returns:
+		named tuple with the following fields:
+			t (todo): temperature in degrees celsius
+			takenAt (todo): unix timestamp
+	"""
+
+	# open serial port
+	serialport = serial.Serial(timeout=2)
+	serialport.baudrate = baudrate
+	serialport.port = port
+	serialport.open()
+
+	# start T procedure
+	serialport.timeout = None
+	serialport.write(b'T')
+	print(str(datetime.datetime.utcnow())[:-3] + ': Start T command sent')
+	takenAt = (datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)) / datetime.timedelta(seconds=1)
+
+	# wait for result
+	singleCharacter = serialport.read()
+	valuesstr = ''
+	valuesstr += singleCharacter.decode(encoding='utf-8')
+	serialport.timeout = 1
+	while singleCharacter.__len__() > 0:
+		singleCharacter = serialport.read()
+		if singleCharacter.__len__() > 0:
+			valuesstr += singleCharacter.decode(encoding='utf-8')
+	serialport.close()
+	temperature = collections.namedtuple('temperature', ['t', 'takenAt'])
+	return temperature(float(valuesstr)/16.0, takenAt)
+	
+				
+def read_ppm_from_device_uart(baudrate, port, samplerate):
 	"""This function triggers ppm measurement then records and returns voltage samples. Data transmission channel is uart.
 
 	Args:
@@ -146,7 +184,7 @@ def read_from_device_uart(baudrate, port, samplerate):
 	# start ppm procedure
 	serialport.timeout = None
 	serialport.write(b'S')
-	print(str(datetime.datetime.utcnow())[:-3] + ': Start command sent')
+	print(str(datetime.datetime.utcnow())[:-3] + ': Start PPM command sent')
 
 	# wait for adc results
 	singleCharacter = serialport.read()
@@ -181,7 +219,7 @@ def read_from_device_uart(baudrate, port, samplerate):
 	return rawdata(voltagesamples, adcstarttime)
 
 
-def read_from_file(filename, presenttime = True):
+def read_ppm_from_file(filename, presenttime = True):
 	"""This function reads single measurement data from a file
 
 	Args:
