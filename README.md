@@ -11,20 +11,25 @@ Single PPM measurement is triggered by a start command sent through a serial por
 First measurements obtained with the setup show high correlation with data published by INTERMAGNET observatory in Belsk, as shown in figure 1. Figure 2 shows raw and initially processed data of a single PPM measurement. Figure 3 shows the experimental setup at early stages of the project.
 
 <figure>
-    <img src="images/20160720.png" alt="Single PPM measurement" title="Single PPM measurement">
+    <img src="images/20160720.png" alt="Single PPM measurement" title="2016-07-20">
+</figure>
+</br>
+<figure>
+    <img src="images/20170603.png" alt="Single PPM measurement" title="2017-06-03">
     <figcaption><i>Figure 1. Comparison of measurement results obtained using the setup and data from INTERMAGNET observatory in Belsk.</i></figcaption>
 </figure>
+</br>
 </br>
 <figure>
     <img src="images/20160720_192511_094_1_ABC.png" alt="Single PPM measurement" title="Single PPM measurement">
     <figcaption><i>Figure 2. Single PPM measurement: A) raw signal in the time domain, B) raw signal in the frequency domain, C) PPM signal after Butterworth filtering.</i></figcaption>
 </figure>
 </br>
+</br>
 <figure>
     <img src="images/ppm_setup.jpg" alt="Experimental setup" title="Experimental setup">
     <figcaption><i>Figure 3. Experimental setup at early stages of the project.</i></figcaption>
 </figure>
-[//]: #
 
    [Earth's magnetic field]: http://hyperphysics.phy-astr.gsu.edu/hbase/magnetic/MagEarth.html
    [Larmor precession]: http://hyperphysics.phy-astr.gsu.edu/hbase/Nuclear/larmor.html
