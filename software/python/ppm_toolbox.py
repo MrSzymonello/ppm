@@ -353,3 +353,61 @@ def plot_results(rawdata, retv, catalog, show=True):
 		plt.show()
 	fig1.clear()
 	fig2.clear()
+
+
+def save_raw_data(catalog, raw_data):
+	"""Save raw data to a file
+
+	Args:
+		catalog (str): path to a file storage
+		raw_data: named tuple returned from the read_from_device_uart function
+	"""
+
+	os.makedirs(catalog, exist_ok=True)
+	measurement_file = open(os.path.join(catalog, raw_data.starttime.strftime("%Y%m%d_%H%M%S_%f")[:-3] + "_time.txt"), 'w')
+	for (i, adc) in enumerate(raw_data.voltagesamples):
+		measurement_file.write(str(i / settings.samplerate) + '\t' + str(adc) + '\n')
+	measurement_file.close()
+
+
+def save_results(catalog, raw_data, results):
+	"""Save analysis results to a file
+
+	Args:
+		catalog (str): path to a file storage
+		raw_data: named tuple returned from the read_from_device_uart function
+		results: named tuple returned from the analyze_ppm function
+	"""
+
+	analysis_results_file = open(os.path.join(catalog, raw_data.starttime.strftime("%Y%m%d") + ".txt"), 'a+')
+
+	# write header
+	if os.stat(os.path.join(catalog, raw_data.starttime.strftime("%Y%m%d") + ".txt")).st_size == 0:
+		analysis_results_file.write('UTC' +
+								'\tB' +
+								'\tfit resonance frequency' +
+								'\tfft resonance frequency' +
+								'\tt0' +
+								'\tfft amplitude' +
+								'\tA' +
+								'\txc error' +
+								'\tw error' +
+								'\tt0 error' +
+								'\tA error' +
+								'\ty0 error' +
+								'\n')
+
+	# write results
+	analysis_results_file.write(raw_data.starttime.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3] +
+							'\t' + "{0:.2f}".format(results.B) +
+							'\t' + "{0:.2f}".format(results.frezfit) +
+							'\t' + "{0:.2f}".format(results.frezfft) +
+							'\t' + "{0:.2f}".format(results.t0) +
+							'\t' + "{0:.2f}".format(results.frezfft_amplitude) +
+							'\t' + "{0:.2f}".format(results.A) +
+							'\t' + "{:.2E}".format(results.x0_error) +
+							'\t' + "{:.2E}".format(results.f_error) +
+							'\t' + "{:.2E}".format(results.t0_error) +
+							'\t' + "{:.2E}".format(results.A_error) +
+							'\t' + "{:.2E}".format(results.y0_error) +
+							'\n')
