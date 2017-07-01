@@ -9,6 +9,7 @@ import time
 import threading
 import sys
 import warnings
+import os
 
 from ppm_toolbox import analyze_ppm
 from ppm_toolbox import read_ppm_from_file
@@ -17,10 +18,13 @@ from ppm_toolbox import read_temperature_from_device_uart
 from ppm_toolbox import plot_results
 from ppm_toolbox import save_raw_data
 from ppm_toolbox import save_results
+from ppm_toolbox import Logger
 from scipy.optimize import OptimizeWarning
 
 warnings.filterwarnings('error', category=RuntimeWarning)
 warnings.filterwarnings("error", category=OptimizeWarning)
+
+sys.stderr = Logger(sys.stderr, os.path.join(settings.datacatalog, datetime.datetime.utcnow().strftime("%Y%m%d")))
 
 next_call = time.time()
 
@@ -36,6 +40,7 @@ def ppm_measure(runcontinuosly=settings.runcontinuosly, plot=settings.plot):
 
 			# save raw data
 			catalog = settings.datacatalog + raw_data.starttime.strftime("%Y%m%d")
+			sys.stderr.set_catalog(catalog) # keep logger updated to handle day change at UTC midnight
 			file = save_raw_data(catalog, raw_data)
 
 			# analyze

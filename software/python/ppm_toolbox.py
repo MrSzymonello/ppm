@@ -414,3 +414,20 @@ def save_results(catalog, raw_data, results):
 							'\t' + "{:.2E}".format(results.A_error) +
 							'\t' + "{:.2E}".format(results.y0_error) +
 							'\n')
+
+	analysis_results_file.close()
+
+
+class Logger:
+	def __init__(self, stream, catalog):
+		self.stream = stream
+		self.catalog = catalog
+
+	def write(self, data):
+		self.stream.write(data)
+		self.logfile = open(os.path.join(self.catalog, '_errors.log'), 'a+')
+		self.logfile.write(data)
+		self.logfile.close()
+
+	def set_catalog(self, catalog):
+		self.catalog = catalog
