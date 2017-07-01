@@ -364,10 +364,13 @@ def save_raw_data(catalog, raw_data):
 	"""
 
 	os.makedirs(catalog, exist_ok=True)
-	measurement_file = open(os.path.join(catalog, raw_data.starttime.strftime("%Y%m%d_%H%M%S_%f")[:-3] + "_time.txt"), 'w')
+	filename = raw_data.starttime.strftime("%Y%m%d_%H%M%S_%f")[:-3] + "_time.txt"
+	measurement_file = open(os.path.join(catalog, filename), 'w')
 	for (i, adc) in enumerate(raw_data.voltagesamples):
 		measurement_file.write(str(i / settings.samplerate) + '\t' + str(adc) + '\n')
 	measurement_file.close()
+
+	return filename
 
 
 def save_results(catalog, raw_data, results):
