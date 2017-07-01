@@ -8,6 +8,7 @@ import datetime
 import time
 import threading
 import sys
+import warnings
 
 from ppm_toolbox import analyze_ppm
 from ppm_toolbox import read_ppm_from_file
@@ -16,7 +17,9 @@ from ppm_toolbox import read_temperature_from_device_uart
 from ppm_toolbox import plot_results
 from ppm_toolbox import save_raw_data
 from ppm_toolbox import save_results
+from scipy.optimize import OptimizeWarning
 
+warnings.filterwarnings("error", category=OptimizeWarning)
 
 next_call = time.time()
 
@@ -71,6 +74,10 @@ def ppm_measure(runcontinuosly=settings.runcontinuosly, plot=settings.plot):
 		print(e)
 	except RuntimeError as e:
 		print(e)
+	except OptimizeWarning as e:
+		# OptimizeWarning: Covariance of the parameters could not be estimated
+		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
+
 	if runcontinuosly:
 		global next_call
 		next_call = next_call + settings.sleeptime
