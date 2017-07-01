@@ -19,6 +19,7 @@ from ppm_toolbox import save_raw_data
 from ppm_toolbox import save_results
 from scipy.optimize import OptimizeWarning
 
+warnings.filterwarnings('error', category=RuntimeWarning)
 warnings.filterwarnings("error", category=OptimizeWarning)
 
 next_call = time.time()
@@ -76,6 +77,9 @@ def ppm_measure(runcontinuosly=settings.runcontinuosly, plot=settings.plot):
 		print(e)
 	except OptimizeWarning as e:
 		# OptimizeWarning: Covariance of the parameters could not be estimated
+		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
+	except RuntimeWarning as e:
+		# RuntimeWarning: overflow encountered in exp
 		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
 
 	if runcontinuosly:
