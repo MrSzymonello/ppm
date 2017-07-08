@@ -43,34 +43,35 @@ def ppm_measure(runcontinuosly=settings.runcontinuosly, plot=settings.plot):
 			sys.stderr.set_catalog(catalog) # keep logger updated to handle day change at UTC midnight
 			file = save_raw_data(catalog, raw_data)
 
-			# analyze
-			retv = analyze_ppm(raw_data.voltagesamples, settings.samplerate, fitrangepct=[4.0, 90.0])
+			if settings.analyse:
+				# analyze
+				retv = analyze_ppm(raw_data.voltagesamples, settings.samplerate, fitrangepct=[4.0, 90.0])
 
-			if retv.t0 <= 0 or retv.t0 > 5:
-				print(file + ' skipped, t0 = ' + str(retv.t0), file=sys.stderr)
-				return
+				if retv.t0 <= 0 or retv.t0 > 5:
+					print(file + ' skipped, t0 = ' + str(retv.t0), file=sys.stderr)
+					return
 
-			if retv.t0_error > 1:
-				print(file + ' skipped, t0_error = ' + str(retv.t0_error), file=sys.stderr)
-				return
+				if retv.t0_error > 1:
+					print(file + ' skipped, t0_error = ' + str(retv.t0_error), file=sys.stderr)
+					return
 
-			if retv.x0_error > 1:
-				print(file + ' skipped, x0_error = ' + str(retv.x0_error), file=sys.stderr)
-				return
+				if retv.x0_error > 1:
+					print(file + ' skipped, x0_error = ' + str(retv.x0_error), file=sys.stderr)
+					return
 
-			if retv.f_error > 1:
-				print(file + ' skipped, f_error = ' + str(retv.f_error), file=sys.stderr)
-				return
+				if retv.f_error > 1:
+					print(file + ' skipped, f_error = ' + str(retv.f_error), file=sys.stderr)
+					return
 
-			print('B = ' + "{0:.2f}".format(retv.B) + ' nT')
-			print('t0 = ' + "{0:.2f}".format(retv.t0) + ' s')
+				print('B = ' + "{0:.2f}".format(retv.B) + ' nT')
+				print('t0 = ' + "{0:.2f}".format(retv.t0) + ' s')
 
-			# save analysis results
-			save_results(catalog, raw_data, retv)
+				# save analysis results
+				save_results(catalog, raw_data, retv)
 
-			# plot results
-			if plot:
-				plot_results(raw_data, retv, catalog, show=not runcontinuosly)
+				# plot results
+				if plot:
+					plot_results(raw_data, retv, catalog, show=not runcontinuosly)
 				
 		if settings.t_on:
 			temperature = read_temperature_from_device_uart(settings.baudrate, settings.port)

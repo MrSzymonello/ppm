@@ -5,17 +5,20 @@ samplerate = 5000
 baudrate = 115200
 
 # set to True if raspberry pi is in use
-raspberrypi = False
+raspberrypi = True
 
 # com port
-# port = '/dev/ttyAMA0' #for raspberry pi
-port = 'COM39' #for windows
+port = '/dev/ttyAMA0'	# for raspberry pi
+# port = 'COM39'		# for windows
 
 # single measurement mode if set to False
 runcontinuosly = True
 
 # time between measurements
 sleeptime = 30
+
+# if set to True raw data is processed
+analyse = False
 
 # if set to True plots are saved as png files in data catalog
 plot = True
@@ -33,4 +36,4 @@ sampledatafile = '20170910_151226_646_time_sample_data.txt'
 ppm_on = True
 
 # switch on/off flag for temperature measurement
-t_on = True
+t_on = False
