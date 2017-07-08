@@ -239,12 +239,14 @@ def read_ppm_from_file(filename, presenttime = True):
 
 	adctab = []
 
+	samplerate = 1 / (float(content[1].split()[0]) - float(content[0].split()[0]))
+
 	for line in content:
 		splitted = line.split()
 		adctab.append(int(splitted[1]))
 
-	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime'])
-	return rawdata(adctab, measurementtime)
+	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate'])
+	return rawdata(adctab, measurementtime, samplerate)
 
 
 def butter_bandpass(lowcut, highcut, samplerate, order=5):

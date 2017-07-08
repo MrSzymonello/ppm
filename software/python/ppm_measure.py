@@ -77,6 +77,7 @@ def ppm_measure(runcontinuosly=settings.runcontinuosly, plot=settings.plot):
 			print(temperature.t)
 			
 	except OSError as e:
+		# could not open serial port
 		print(e)
 	except RuntimeError as e:
 		print(e)
