@@ -15,7 +15,7 @@ First measurements obtained with the setup show high correlation with data publi
 </figure>
 </br>
 <figure>
-    <img src="images/20170603.png" alt="Single PPM measurement" title="2017-06-03">
+    <img src="images/20170709.png" alt="Single PPM measurement" title="2017-07-09">
     <figcaption><i>Figure 1. Comparison of measurement results obtained using the setup and data from INTERMAGNET observatory in Belsk.</i></figcaption>
 </figure>
 </br>
