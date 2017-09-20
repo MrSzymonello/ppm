@@ -173,6 +173,7 @@ def read_ppm_from_device_uart(baudrate, port, samplerate):
 		named tuple with the following fields:
 			voltagesamples (list of ints): voltage samples in mV
 			starttime (float): unix timestamp representing time when first voltage sample were taken
+			samplerate (int): adc sample rate per second
 	"""
 
 	# open serial port
@@ -216,8 +217,8 @@ def read_ppm_from_device_uart(baudrate, port, samplerate):
 
 	adcstarttime = transmissionstart + datetime.timedelta(seconds=-voltagesamples.__len__() / samplerate)
 	timestamp = (adcstarttime - datetime.datetime(1970, 1, 1)) / datetime.timedelta(seconds=1)
-	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime'])
-	return rawdata(voltagesamples, timestamp)
+	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate'])
+	return rawdata(voltagesamples, timestamp, samplerate)
 
 
 def read_ppm_from_file(filename, presenttime = True):
@@ -230,6 +231,7 @@ def read_ppm_from_file(filename, presenttime = True):
 		named tuple with the following fields:
 			voltagesamples (list of ints): voltage samples in mV
 			starttime (float): unix timestamp representing time when first voltage sample were taken
+			samplerate (int): adc sample rate per second
 	"""
 	if not presenttime:
 		measurementtime = datetime.datetime.strptime(ntpath.basename(filename)[:19], '%Y%m%d_%H%M%S_%f')
