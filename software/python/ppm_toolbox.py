@@ -174,6 +174,7 @@ def read_ppm_from_device_uart(baudrate, port, samplerate):
 			voltagesamples (list of ints): voltage samples in mV
 			starttime (float): unix timestamp representing time when first voltage sample were taken
 			samplerate (int): adc sample rate per second
+			base64samples (str): voltage samples encoded to base64
 	"""
 
 	# open serial port
@@ -217,8 +218,8 @@ def read_ppm_from_device_uart(baudrate, port, samplerate):
 
 	adcstarttime = transmissionstart + datetime.timedelta(seconds=-voltagesamples.__len__() / samplerate)
 	timestamp = (adcstarttime - datetime.datetime(1970, 1, 1)) / datetime.timedelta(seconds=1)
-	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate'])
-	return rawdata(voltagesamples, timestamp, samplerate)
+	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate', 'base64samples'])
+	return rawdata(voltagesamples, timestamp, samplerate, valuesstr)
 
 
 def read_ppm_from_file(filename, presenttime = True):
@@ -232,6 +233,7 @@ def read_ppm_from_file(filename, presenttime = True):
 			voltagesamples (list of ints): voltage samples in mV
 			starttime (float): unix timestamp representing time when first voltage sample were taken
 			samplerate (int): adc sample rate per second
+			base64samples (str): voltage samples encoded to base64
 	"""
 	if not presenttime:
 		measurementtime = datetime.datetime.strptime(ntpath.basename(filename)[:19], '%Y%m%d_%H%M%S_%f')
@@ -248,9 +250,25 @@ def read_ppm_from_file(filename, presenttime = True):
 		splitted = line.split()
 		adctab.append(int(splitted[1]))
 
-	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate'])
+	# encode to base64 as in the microcontroller
+	adctab_bytesplitted = []
+	i = 0
+	# take two 12 bit values and split them into 3 bytes
+	for adc in adctab:
+		if i % 2 == 0:
+			adc1 = adc
+		else:
+			adc2 = adc
+			adctab_bytesplitted.append(adc1 >> 4);
+			adctab_bytesplitted.append(((adc1 & 0xF) << 4) | ((adc2 >> 8) & 0xF));
+			adctab_bytesplitted.append(adc2 & 0xFF);
+		i += 1
+	# encode to base64
+	base64encoded = base64.b64encode(bytearray(adctab_bytesplitted))
+
+	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate', 'base64samples'])
 	timestamp = (measurementtime - datetime.datetime(1970, 1, 1)) / datetime.timedelta(seconds=1)
-	return rawdata(adctab, timestamp, samplerate)
+	return rawdata(adctab, timestamp, samplerate, base64encoded)
 
 
 def butter_bandpass(lowcut, highcut, samplerate, order=5):
