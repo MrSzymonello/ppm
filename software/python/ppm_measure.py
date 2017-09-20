@@ -39,7 +39,7 @@ def ppm_measure(runcontinuosly=settings.runcontinuosly, plot=settings.plot):
 				raw_data = read_ppm_from_device_uart(settings.baudrate, settings.port, settings.samplerate)
 
 			# save raw data
-			catalog = settings.datacatalog + raw_data.starttime.strftime("%Y%m%d")
+			catalog = settings.datacatalog + datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y%m%d")
 			sys.stderr.set_catalog(catalog) # keep logger updated to handle day change at UTC midnight
 			file = save_raw_data(catalog, raw_data)
 

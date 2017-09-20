@@ -172,7 +172,7 @@ def read_ppm_from_device_uart(baudrate, port, samplerate):
 	Returns:
 		named tuple with the following fields:
 			voltagesamples (list of ints): voltage samples in mV
-			starttime (datetime): utc time when first voltage sample were taken
+			starttime (float): unix timestamp representing time when first voltage sample were taken
 	"""
 
 	# open serial port
@@ -215,8 +215,9 @@ def read_ppm_from_device_uart(baudrate, port, samplerate):
 		voltagesamples.append(adc2)
 
 	adcstarttime = transmissionstart + datetime.timedelta(seconds=-voltagesamples.__len__() / samplerate)
+	timestamp = (adcstarttime - datetime.datetime(1970, 1, 1)) / datetime.timedelta(seconds=1)
 	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime'])
-	return rawdata(voltagesamples, adcstarttime)
+	return rawdata(voltagesamples, timestamp)
 
 
 def read_ppm_from_file(filename, presenttime = True):
@@ -228,7 +229,7 @@ def read_ppm_from_file(filename, presenttime = True):
 	Returns:
 		named tuple with the following fields:
 			voltagesamples (list of ints): voltage samples in mV
-			starttime (datetime): utc time when first voltage sample were taken
+			starttime (float): unix timestamp representing time when first voltage sample were taken
 	"""
 	if not presenttime:
 		measurementtime = datetime.datetime.strptime(ntpath.basename(filename)[:19], '%Y%m%d_%H%M%S_%f')
@@ -246,7 +247,8 @@ def read_ppm_from_file(filename, presenttime = True):
 		adctab.append(int(splitted[1]))
 
 	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate'])
-	return rawdata(adctab, measurementtime, samplerate)
+	timestamp = (measurementtime - datetime.datetime(1970, 1, 1)) / datetime.timedelta(seconds=1)
+	return rawdata(adctab, timestamp, samplerate)
 
 
 def butter_bandpass(lowcut, highcut, samplerate, order=5):
@@ -304,8 +306,8 @@ def plot_results(rawdata, retv, catalog, show=True):
 
 	N = rawdata.voltagesamples.__len__()
 	t = np.linspace(0, N / settings.samplerate, num=N)
-	mtime = rawdata.starttime.strftime("%Y-%m-%d %H:%M:%S")
-	timestr = rawdata.starttime.strftime("%Y%m%d_%H%M%S_%f")[:-3]
+	mtime = datetime.datetime.utcfromtimestamp(rawdata.starttime).strftime("%Y-%m-%d %H:%M:%S")
+	timestr = datetime.datetime.utcfromtimestamp(rawdata.starttime).strftime("%Y%m%d_%H%M%S_%f")[:-3]
 
 	fig1 = plt.figure(1, figsize=(7, 10))
 
@@ -366,7 +368,7 @@ def save_raw_data(catalog, raw_data):
 	"""
 
 	os.makedirs(catalog, exist_ok=True)
-	filename = raw_data.starttime.strftime("%Y%m%d_%H%M%S_%f")[:-3] + "_time.txt"
+	filename = datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y%m%d_%H%M%S_%f")[:-3] + "_time.txt"
 	measurement_file = open(os.path.join(catalog, filename), 'w')
 	for (i, adc) in enumerate(raw_data.voltagesamples):
 		measurement_file.write(str(i / settings.samplerate) + '\t' + str(adc) + '\n')
@@ -384,10 +386,11 @@ def save_results(catalog, raw_data, results):
 		results: named tuple returned from the analyze_ppm function
 	"""
 
-	analysis_results_file = open(os.path.join(catalog, raw_data.starttime.strftime("%Y%m%d") + ".txt"), 'a+')
+	analysis_results_file_path = os.path.join(catalog, datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y%m%d") + ".txt")
+	analysis_results_file = open(analysis_results_file_path, 'a+')
 
 	# write header
-	if os.stat(os.path.join(catalog, raw_data.starttime.strftime("%Y%m%d") + ".txt")).st_size == 0:
+	if os.stat(analysis_results_file_path).st_size == 0:
 		analysis_results_file.write('UTC' +
 								'\tB' +
 								'\tfit resonance frequency' +
@@ -403,7 +406,7 @@ def save_results(catalog, raw_data, results):
 								'\n')
 
 	# write results
-	analysis_results_file.write(raw_data.starttime.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3] +
+	analysis_results_file.write(datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3] +
 							'\t' + "{0:.2f}".format(results.B) +
 							'\t' + "{0:.2f}".format(results.frezfit) +
 							'\t' + "{0:.2f}".format(results.frezfft) +
