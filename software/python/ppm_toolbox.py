@@ -377,6 +377,7 @@ def plot_results(rawdata, retv, catalog, show=True):
 		plt.show()
 	fig1.clear()
 	fig2.clear()
+	plt.close()
 
 
 def save_raw_data(catalog, raw_data):
