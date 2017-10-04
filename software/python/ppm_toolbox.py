@@ -206,7 +206,26 @@ def read_ppm_from_device_uart(baudrate, port, samplerate):
 	serialport.close()
 
 	# decode results from base64
-	decoded = base64.b64decode(valuesstr)
+	return decode_from_base64(valuesstr, samplerate, adcstoptime = transmissionstart)
+
+def decode_from_base64(base64samples, samplerate, adcstarttime = None, adcstoptime = None):
+	"""Decode 12-bit voltage samples encoded in base64
+	Args:
+	    base64samples (str): voltage samples encoded to base64
+	    samplerate (int): adc sample rate per second
+	    adcstarttime (datetime): start time of adc sampling (either adcstarttime or adcstoptime must not be None)
+	    adcstoptime (datetime): stop time of adc sampling
+
+	Returns:
+		named tuple with the following fields:
+			voltagesamples (list of ints): voltage samples in mV
+			starttime (float): unix timestamp representing time when first voltage sample were taken
+			samplerate (int): adc sample rate per second
+			base64samples (str): voltage samples encoded to base64
+	"""
+
+	# decode results from base64
+	decoded = base64.b64decode(base64samples)
 	decodedbytes = array.array('B', decoded)
 
 	voltagesamples = []
@@ -216,10 +235,13 @@ def read_ppm_from_device_uart(baudrate, port, samplerate):
 		adc2 = ((decodedbytes[z - 1] << 8) & 0xF00) + (decodedbytes[z] & 0xFF)
 		voltagesamples.append(adc2)
 
-	adcstarttime = transmissionstart + datetime.timedelta(seconds=-voltagesamples.__len__() / samplerate)
+	if adcstarttime is None:
+		adcstarttime = adcstoptime + datetime.timedelta(seconds=-voltagesamples.__len__() / samplerate)
+	
 	timestamp = (adcstarttime - datetime.datetime(1970, 1, 1)) / datetime.timedelta(seconds=1)
+
 	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate', 'base64samples'])
-	return rawdata(voltagesamples, timestamp, samplerate, valuesstr)
+	return rawdata(voltagesamples, timestamp, samplerate, base64samples)
 
 
 def read_ppm_from_file(filename, presenttime = True):
@@ -264,7 +286,7 @@ def read_ppm_from_file(filename, presenttime = True):
 			adctab_bytesplitted.append(adc2 & 0xFF);
 		i += 1
 	# encode to base64
-	base64encoded = base64.b64encode(bytearray(adctab_bytesplitted))
+	base64encoded = base64.b64encode(bytearray(adctab_bytesplitted)).decode("utf-8")
 
 	rawdata = collections.namedtuple('rawdata', ['voltagesamples', 'starttime', 'samplerate', 'base64samples'])
 	timestamp = (measurementtime - datetime.datetime(1970, 1, 1)) / datetime.timedelta(seconds=1)
