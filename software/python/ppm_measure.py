@@ -81,7 +81,8 @@ def ppm_measure(runcontinuosly=settings.runcontinuosly, plot=settings.plot):
 		# could not open serial port
 		print(e)
 	except RuntimeError as e:
-		print(e)
+		# RuntimeError: Optimal parameters not found
+		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
 	except OptimizeWarning as e:
 		# OptimizeWarning: Covariance of the parameters could not be estimated
 		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
