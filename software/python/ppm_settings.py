@@ -21,9 +21,11 @@ sleeptime = 30
 analyse = False
 
 # if set to True plots are saved as png files in data catalog
+# used by both device and server tier
 plot = True
 
 # relative or absolute path to a catalog with measurement files
+# used by both device and server tier
 datacatalog = 'data/'
 
 # if set to True data is read from a file
@@ -37,3 +39,9 @@ ppm_on = True
 
 # switch on/off flag for temperature measurement
 t_on = False
+
+# if set to True data is uploaded to a server tier
+upload_to_server = True
+
+# POST endpoint
+data_server = 'http://localhost:3000/ppms'

@@ -11,6 +11,9 @@ import sys
 import warnings
 import os
 
+import json
+import requests
+
 from ppm_toolbox import analyze_ppm
 from ppm_toolbox import read_ppm_from_file
 from ppm_toolbox import read_ppm_from_device_uart
@@ -72,6 +75,15 @@ def ppm_measure(runcontinuosly=settings.runcontinuosly, plot=settings.plot):
 				# plot results
 				if plot:
 					plot_results(raw_data, retv, catalog, show=not runcontinuosly)
+
+			if settings.upload_to_server:
+				jsonRequest = json.loads('{"base64samples": "' + str(raw_data.base64samples) +
+											'", "takenAt": ' + str(raw_data.starttime) +
+												', "samplerate": ' + str(raw_data.samplerate) + '}')
+				try:
+					requests.post(settings.data_server, json=jsonRequest)
+				except requests.RequestException as e:
+					print('Upload to server failed: ', e, file=sys.stderr)
 				
 		if settings.t_on:
 			temperature = read_temperature_from_device_uart(settings.baudrate, settings.port)
