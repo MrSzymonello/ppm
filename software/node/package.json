@@ -1,0 +1,23 @@
+{
+  "name": "ppm-api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": "6.2.2"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.5",
+    "mongoose": "^4.5.9",
+    "python-shell": "^0.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.10.2"
+  }
+}
