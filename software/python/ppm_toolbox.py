@@ -64,7 +64,7 @@ def analyze_ppm(voltagesamples, samplerate, freqrange=[2125.0, 2135.0], fitrange
 		named tuple with the following fields:
 			B (float64): Earth's magnetic field strength
 			xfft (array of floats 64): dft sample frequencies
-			yfft (array of complex128): dft values
+			yfft (array of floats 64): dft values
 			filtered (array of floats 64): voltage samples in the time domain after applying the Butterworth filter
 			frezfit (float64): resonance frequency calculated by fitting to the model
 			frezfft (float64): resonance frequency calculated from dft
@@ -408,6 +408,8 @@ def save_raw_data(catalog, raw_data):
 	Args:
 		catalog (str): path to a file storage
 		raw_data: named tuple returned from the read_from_device_uart function
+	Returns:
+		filename
 	"""
 
 	os.makedirs(catalog, exist_ok=True)
@@ -415,6 +417,27 @@ def save_raw_data(catalog, raw_data):
 	measurement_file = open(os.path.join(catalog, filename), 'w')
 	for (i, adc) in enumerate(raw_data.voltagesamples):
 		measurement_file.write(str(i / settings.samplerate) + '\t' + str(adc) + '\n')
+	measurement_file.close()
+
+	return filename
+
+
+def save_raw_data_FFT(catalog, results, starttime):
+	"""Save raw data in the frequency domain to a file
+
+	Args:
+		catalog (str): path to a file storage
+		results: named tuple returned from the analyze_ppm function
+		starttime (float): unix timestamp representing time when first voltage sample were taken
+	Returns:
+		filename
+	"""
+
+	os.makedirs(catalog, exist_ok=True)
+	filename = datetime.datetime.utcfromtimestamp(starttime).strftime("%Y%m%d_%H%M%S_%f")[:-3] + "_frequency.txt"
+	measurement_file = open(os.path.join(catalog, filename), 'w')
+	for (i, adc) in enumerate(results.yfft):
+		measurement_file.write(str(results.xfft[i]) + '\t' + str(adc) + '\n')
 	measurement_file.close()
 
 	return filename
