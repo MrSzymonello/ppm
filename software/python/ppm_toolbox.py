@@ -98,8 +98,8 @@ def analyze_ppm(voltagesamples, samplerate, freqrange=[2125.0, 2135.0], fitrange
 
 	t = np.linspace(0, N / samplerate, num=N)
 
-	fit_results = curve_fit(sine_damp, t[fitrangepct[0] * N / 100:fitrangepct[1] * N / 100],
-							filtered[fitrangepct[0] * N / 100:fitrangepct[1] * N / 100],
+	fit_results = curve_fit(sine_damp, t[int(fitrangepct[0] * N / 100):int(fitrangepct[1] * N / 100)],
+							filtered[int(fitrangepct[0] * N / 100):int(fitrangepct[1] * N / 100)],
 							p0=[0, fftrez, 2.0, 400.0, 0.0])
 	x0 = fit_results[0][0]
 	f = fit_results[0][1]
