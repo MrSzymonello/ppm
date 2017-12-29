@@ -64,7 +64,7 @@ try:
 			'{:.2E}\t'.format(retv.t0_error) +
 			'{:.2E}\t'.format(retv.A_error) +
 			'{:.2E}\t'.format(retv.y0_error) +
-			'{}'.format(len(raw_data.voltagesamples)))
+			'{}'.format(len(raw_data.voltagesamples)), file=sys.stdout)
 	
 		# save analysis results
 		save_results(catalog, raw_data, retv)
