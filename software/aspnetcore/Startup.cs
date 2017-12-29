@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using ppm_api.Services;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ppm_api
 {
@@ -36,6 +37,12 @@ namespace ppm_api
             var mongoClient = new MongoClient("mongodb://localhost:27017");
             var database = mongoClient.GetDatabase("TodoApp");
             services.AddScoped<IMongoDatabase>(_ => database);
+
+            // Register the Swagger generator, defining one or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "PPM API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,9 +51,18 @@ namespace ppm_api
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseMvc();
+            // app.UseStaticFiles();
 
-            // MongoConfigurator.Initialize();
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PPM API V1");
+            });
+
+            app.UseMvc();
         }
     }
 }
