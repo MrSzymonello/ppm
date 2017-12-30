@@ -33,6 +33,7 @@ namespace Api
             // Add framework services.
             services.AddMvc();
             services.AddScoped<IMongoService, MongoService>();
+            services.AddScoped<IPythonRunner, PythonRunner>();
 
             var mongoClient = new MongoClient("mongodb://localhost:27017");
             var database = mongoClient.GetDatabase("TodoApp");
