@@ -11,10 +11,11 @@ namespace Api.Services
     {
         public async Task<ProcessedPPM> ProcessRawData(RawPPM rawPPM)
         {
+            string pythonScriptPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "ppm_server.py");
             ProcessStartInfo pythonProcess = new ProcessStartInfo()
             {
                 FileName = "python",
-                Arguments = $"..\\..\\..\\python\\ppm_server.py {rawPPM.SampleRate.ToString().Replace(',','.')} {rawPPM.TakenAt.ToString().Replace(',','.')}",
+                Arguments = $"{pythonScriptPath} {rawPPM.SampleRate.ToString().Replace(',','.')} {rawPPM.TakenAt.ToString().Replace(',','.')}",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardInput = true,

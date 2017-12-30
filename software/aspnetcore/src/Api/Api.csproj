@@ -16,6 +16,11 @@
     <PackageReference Include="MongoDB.Driver" Version="2.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
   </ItemGroup>
-  
-  
+
+  <ItemGroup>
+    <Content Include="../../../python/ppm_server.py" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../../python/ppm_settings.py" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../../python/ppm_toolbox.py" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
