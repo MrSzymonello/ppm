@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ppm_api.Models;
+using Api.Models;
 using MongoDB.Driver;
 using System;
 
-namespace ppm_api.Services
+namespace Api.Services
 {
     public class MongoService : IMongoService
     {

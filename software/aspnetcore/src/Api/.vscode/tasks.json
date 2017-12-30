@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/ppm-api.csproj"
+                "${workspaceRoot}/Api.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

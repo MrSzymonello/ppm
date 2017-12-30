@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace ppm_api.Models
+namespace Api.Models
 {
     public class ProcessedPPM
     {

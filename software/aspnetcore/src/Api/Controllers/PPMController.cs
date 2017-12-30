@@ -7,10 +7,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ppm_api.Models;
-using ppm_api.Services;
+using Api.Models;
+using Api.Services;
 
-namespace ppm_api.Controllers
+namespace Api.Controllers
 {
     [Route("api/[controller]")]
     public class PPMController : Controller
@@ -38,7 +38,7 @@ namespace ppm_api.Controllers
             ProcessStartInfo pythonProcess = new ProcessStartInfo()
             {
                 FileName = "python",
-                Arguments = $"..\\python\\ppm_server.py {value.SampleRate.ToString().Replace(',','.')} {value.TakenAt.ToString().Replace(',','.')}",
+                Arguments = $"..\\..\\..\\python\\ppm_server.py {value.SampleRate.ToString().Replace(',','.')} {value.TakenAt.ToString().Replace(',','.')}",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardInput = true,

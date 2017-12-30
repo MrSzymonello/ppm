@@ -8,10 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using ppm_api.Services;
+using Api.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
-namespace ppm_api
+namespace Api
 {
     public class Startup
     {
@@ -50,8 +50,6 @@ namespace ppm_api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            // app.UseStaticFiles();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

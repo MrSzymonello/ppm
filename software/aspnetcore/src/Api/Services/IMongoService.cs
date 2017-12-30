@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ppm_api.Models;
+using Api.Models;
 
-namespace ppm_api.Services
+namespace Api.Services
 {
     public interface IMongoService
     {

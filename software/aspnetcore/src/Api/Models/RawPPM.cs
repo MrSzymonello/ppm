@@ -1,4 +1,4 @@
-namespace ppm_api.Models
+namespace Api.Models
 {
     public class RawPPM
     {
