@@ -31,6 +31,9 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddOptions();
+            services.Configure<AppOptions>(Configuration.GetSection("app"));
+            
             services.AddMvc();
             services.AddScoped<IMongoService, MongoService>();
             services.AddScoped<IPythonRunner, PythonRunner>();

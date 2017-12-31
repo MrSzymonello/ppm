@@ -4,18 +4,26 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Api.Models;
+using Microsoft.Extensions.Options;
 
 namespace Api.Services
 {
     public class PythonRunner : IPythonRunner
     {
+        private readonly IOptions<AppOptions> appOptions;
+
+        public PythonRunner(IOptions<AppOptions> appOptions)
+        {
+            this.appOptions = appOptions;
+        }
+        
         public async Task<ProcessedPPM> ProcessRawData(RawPPM rawPPM)
         {
             string pythonScriptPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "ppm_server.py");
             ProcessStartInfo pythonProcess = new ProcessStartInfo()
             {
                 FileName = "python",
-                Arguments = $"{pythonScriptPath} {rawPPM.SampleRate.ToString().Replace(',','.')} {rawPPM.TakenAt.ToString().Replace(',','.')}",
+                Arguments = $"{pythonScriptPath} {rawPPM.SampleRate.ToString().Replace(',','.')} {rawPPM.TakenAt.ToString().Replace(',','.')} {appOptions.Value.DataCatalog} {appOptions.Value.CreatePlots.ToString()}",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardInput = true,

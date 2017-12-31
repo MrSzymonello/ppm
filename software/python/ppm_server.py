@@ -1,5 +1,3 @@
-import ppm_settings as settings
-
 import datetime
 import sys
 import warnings
@@ -16,13 +14,17 @@ from scipy.optimize import OptimizeWarning
 warnings.filterwarnings('error', category=RuntimeWarning)
 warnings.filterwarnings("error", category=OptimizeWarning)
 
-sys.stderr = Logger(sys.stderr, os.path.join(settings.datacatalog, datetime.datetime.utcnow().strftime("%Y%m%d")))
-
 sampleRate = float(sys.argv[1])
 adcStartTime = float(sys.argv[2])
+dataCatalog = sys.argv[3]
+plot = True
+if sys.argv[4] == 'False':
+	plot = False
 base64Samples = sys.stdin.read()
 
-def process(base64Samples, sampleRate, adcStartTime):
+sys.stderr = Logger(sys.stderr, os.path.join(dataCatalog, datetime.datetime.utcnow().strftime("%Y%m%d")))
+
+def process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot):
 
 	isValid = True
 
@@ -30,7 +32,7 @@ def process(base64Samples, sampleRate, adcStartTime):
 		raw_data = decode_from_base64(base64Samples, sampleRate, adcstarttime = datetime.datetime.utcfromtimestamp(adcStartTime))
 
 		# save raw data
-		catalog = settings.datacatalog + datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y%m%d")
+		catalog = os.path.join(dataCatalog, datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y%m%d"))
 		sys.stderr.set_catalog(catalog) # keep logger updated to handle day change at UTC midnight
 		file = save_raw_data(catalog, raw_data)
 
@@ -73,7 +75,7 @@ def process(base64Samples, sampleRate, adcStartTime):
 			save_results(catalog, raw_data, retv)
 
 			# plot results
-			if settings.plot:
+			if plot:
 				plot_results(raw_data, retv, catalog, show=False)			
 		else:
 			print('ERROR')
@@ -91,4 +93,4 @@ def process(base64Samples, sampleRate, adcStartTime):
 		print('ERROR')
 		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
 
-process(base64Samples, sampleRate, adcStartTime)
+process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot)
