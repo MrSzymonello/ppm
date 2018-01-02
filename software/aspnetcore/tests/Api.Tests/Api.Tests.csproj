@@ -18,13 +18,13 @@
   </ItemGroup>
 
 <ItemGroup>
-  <None Update="data/20160716_185655_020_time_t0_x0_f_error.json" CopyToOutputDirectory="PreserveNewest" />
-  <None Update="data/20160716_190124_861_time_covariance_of_the_parameters_could_not_be_estimated.json" CopyToOutputDirectory="PreserveNewest" />
-  <None Update="data/20160720_100613_940_time_t0_negative_t0_error.json" CopyToOutputDirectory="PreserveNewest" />
-  <None Update="data/20160910_160518_699_time_t0_too_big.json" CopyToOutputDirectory="PreserveNewest" />
-  <None Update="data/20160910_162232_887_time_optimal_parameters_not_found.json" CopyToOutputDirectory="PreserveNewest" />
-  <None Update="data/20170709_060220_971_time.json" CopyToOutputDirectory="PreserveNewest" />
-  <None Update="data/20170804_191702_756_time_overflow_encountered_in_exp.json" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="test_data/20160716_185655_020_time_t0_x0_f_error.json" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="test_data/20160716_190124_861_time_covariance_of_the_parameters_could_not_be_estimated.json" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="test_data/20160720_100613_940_time_t0_negative_t0_error.json" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="test_data/20160910_160518_699_time_t0_too_big.json" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="test_data/20160910_162232_887_time_optimal_parameters_not_found.json" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="test_data/20170709_060220_971_time.json" CopyToOutputDirectory="PreserveNewest" />
+  <None Update="test_data/20170804_191702_756_time_overflow_encountered_in_exp.json" CopyToOutputDirectory="PreserveNewest" />
 </ItemGroup>
 
 </Project>
