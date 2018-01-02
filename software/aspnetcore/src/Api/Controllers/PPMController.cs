@@ -37,16 +37,16 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]RawPPM value)
         {
-            ProcessedPPM ppm = await pythonRunner.ProcessRawData(value);
-            if(ppm != null)
+            var results = await pythonRunner.ProcessRawData(value);
+            if(results.processedPPM != null)
             {
-                ProcessedPPM created = await mongoService.Create(ppm);
-                string location = Url.RouteUrl("GetPPMById", new { id = ppm.Id }, Request.Scheme, Request.Host.ToUriComponent());
+                ProcessedPPM created = await mongoService.Create(results.processedPPM);
+                string location = Url.RouteUrl("GetPPMById", new { id = results.processedPPM.Id }, Request.Scheme, Request.Host.ToUriComponent());
                 return Created(location, created);
             }
             else
             {
-                return Ok("PPM analysis failed");
+                return Ok(new {errors = $"PPM analysis failed: \n{results.errors}"});
             }
         }
     }

@@ -17,7 +17,7 @@ namespace Api.Services
             this.appOptions = appOptions;
         }
         
-        public async Task<ProcessedPPM> ProcessRawData(RawPPM rawPPM)
+        public async Task<(ProcessedPPM processedPPM, string errors)> ProcessRawData(RawPPM rawPPM)
         {
             string pythonScriptPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "ppm_server.py");
             ProcessStartInfo pythonProcess = new ProcessStartInfo()
@@ -31,7 +31,9 @@ namespace Api.Services
                 RedirectStandardError = true
             };
 
-            return await Task<ProcessedPPM>.Run(() => {            
+            string errors = null;
+            
+            ProcessedPPM results = await Task<ProcessedPPM>.Run(() => {            
                 using (Process process = Process.Start(pythonProcess))
                 {
                     // send encoded samples to the Python script using stdin                
@@ -40,6 +42,12 @@ namespace Api.Services
                         writer.Write(rawPPM.Base64samples);
                     }
                     
+                    // listen for possible error messages
+                    using(StreamReader reader = process.StandardError)
+                    {
+                        errors = reader.ReadToEnd();
+                    }
+
                     // listen for ppm analysis results from the Python script
                     // construct PPM object
                     using (StreamReader reader = process.StandardOutput)
@@ -71,6 +79,8 @@ namespace Api.Services
                     }
                 }
             });
+
+            return (processedPPM: results, errors: errors);
         }
     }
 }

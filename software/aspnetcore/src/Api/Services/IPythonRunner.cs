@@ -5,6 +5,6 @@ namespace Api.Services
 {
     public interface IPythonRunner
     {
-        Task<ProcessedPPM> ProcessRawData(RawPPM rawPPM);
+        Task<(ProcessedPPM processedPPM, string errors)> ProcessRawData(RawPPM rawPPM);
     }
 }
