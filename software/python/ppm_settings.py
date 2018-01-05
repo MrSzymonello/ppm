@@ -1,3 +1,5 @@
+# settings apply only to the device tier
+
 # adc sample rate per second
 samplerate = 5000
 
@@ -21,11 +23,9 @@ sleeptime = 30
 analyse = False
 
 # if set to True plots are saved as png files in data catalog
-# used by both device and server tier
 plot = True
 
 # relative or absolute path to a catalog with measurement files
-# used by both device and server tier
 datacatalog = 'data/'
 
 # if set to True data is read from a file
