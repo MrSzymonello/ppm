@@ -6,9 +6,6 @@ samplerate = 5000
 # uart speed
 baudrate = 115200
 
-# set to True if raspberry pi is in use
-raspberrypi = True
-
 # com port
 port = '/dev/ttyAMA0'	# for raspberry pi
 # port = 'COM39'		# for windows

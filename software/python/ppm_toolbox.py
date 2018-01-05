@@ -12,11 +12,6 @@ import os
 import collections
 import ppm_settings as settings
 
-if settings.raspberrypi:
-	import spidev
-	import time
-	import RPi.GPIO as GPIO
-
 
 def sine_damp(x, x0, f, t0, A, y0):
 	"""Sine function whose amplitude for positive t0 approaches y0 as x (time in the context of ppm) increases
