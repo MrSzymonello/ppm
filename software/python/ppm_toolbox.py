@@ -10,7 +10,6 @@ from scipy.signal import butter, filtfilt
 import matplotlib.pyplot as plt
 import os
 import collections
-import ppm_settings as settings
 
 
 def sine_damp(x, x0, f, t0, A, y0):
@@ -342,7 +341,7 @@ def plot_results(rawdata, retv, catalog, show=True):
 	"""
 
 	N = rawdata.voltagesamples.__len__()
-	t = np.linspace(0, N / settings.samplerate, num=N)
+	t = np.linspace(0, N / rawdata.samplerate, num=N)
 	mtime = datetime.datetime.utcfromtimestamp(rawdata.starttime).strftime("%Y-%m-%d %H:%M:%S")
 	timestr = datetime.datetime.utcfromtimestamp(rawdata.starttime).strftime("%Y%m%d_%H%M%S_%f")[:-3]
 
@@ -411,7 +410,7 @@ def save_raw_data(catalog, raw_data):
 	filename = datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y%m%d_%H%M%S_%f")[:-3] + "_time.txt"
 	measurement_file = open(os.path.join(catalog, filename), 'w')
 	for (i, adc) in enumerate(raw_data.voltagesamples):
-		measurement_file.write(str(i / settings.samplerate) + '\t' + str(adc) + '\n')
+		measurement_file.write(str(i / raw_data.samplerate) + '\t' + str(adc) + '\n')
 	measurement_file.close()
 
 	return filename

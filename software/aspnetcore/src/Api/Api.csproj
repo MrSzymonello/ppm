@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Content Include="../../../python/ppm_server.py" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="../../../python/ppm_settings.py" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="../../../python/ppm_toolbox.py" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
