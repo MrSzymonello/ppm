@@ -2,6 +2,7 @@ import datetime
 import sys
 import warnings
 import os
+import getopt
 
 from ppm_toolbox import analyze_ppm
 from ppm_toolbox import decode_from_base64
@@ -14,17 +15,35 @@ from scipy.optimize import OptimizeWarning
 warnings.filterwarnings('error', category=RuntimeWarning)
 warnings.filterwarnings("error", category=OptimizeWarning)
 
-sampleRate = float(sys.argv[1])
-adcStartTime = float(sys.argv[2])
-dataCatalog = sys.argv[3]
-plot = True
-if sys.argv[4] == 'False':
-	plot = False
+dataCatalog = 'data'
+savePlot = False
+saveRaw = False
+saveSummary = False
+saveError = False
+
+opts, args = getopt.getopt(sys.argv[1:], "d:prse", ["dataCatalog=", "plot", "raw", "summary", "error"])
+
+sampleRate = float(args[0])
+adcStartTime = float(args[1])
+
+for o, a in opts:
+	if o in ("-d", "--datacatalog"):
+		dataCatalog = a
+	elif o in ("-p", "--plot"):
+		savePlot = True
+	elif o in ("-r", "--raw"):
+		saveRaw = True
+	elif o in ("-s", "--summary"):
+		saveSummary = True
+	elif o in ("-e", "--error"):
+		saveError = True
+
 base64Samples = sys.stdin.read()
 
-sys.stderr = Logger(sys.stderr, os.path.join(dataCatalog, datetime.datetime.utcnow().strftime("%Y%m%d")))
+if saveError:
+	sys.stderr = Logger(sys.stderr, os.path.join(dataCatalog, datetime.datetime.utcnow().strftime("%Y%m%d")))
 
-def process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot):
+def process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot, raw, summary, error):
 
 	isValid = True
 	
@@ -32,8 +51,11 @@ def process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot):
 
 	# save raw data
 	catalog = os.path.join(dataCatalog, datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y%m%d"))
-	sys.stderr.set_catalog(catalog) # keep logger updated to handle day change at UTC midnight
-	file = save_raw_data(catalog, raw_data)
+	if error:
+		sys.stderr.set_catalog(catalog) # keep logger updated to handle day change at UTC midnight
+	name = datetime.datetime.utcfromtimestamp(raw_data.starttime).strftime("%Y%m%d_%H%M%S_%f")[:-3]
+	if raw:
+		save_raw_data(catalog, raw_data)
 
 	try:
 		# analyze
@@ -42,33 +64,33 @@ def process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot):
 	except RuntimeError as e:
 		print('ERROR')
 		# RuntimeError: Optimal parameters not found
-		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
+		print(name + ' skipped, ' + e.__str__(), file=sys.stderr)
 		return
 	except OptimizeWarning as e:
 		# OptimizeWarning: Covariance of the parameters could not be estimated
 		print('ERROR')
-		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
+		print(name + ' skipped, ' + e.__str__(), file=sys.stderr)
 		return
 	except RuntimeWarning as e:
 		# RuntimeWarning: overflow encountered in exp
 		print('ERROR')
-		print(file + ' skipped, ' + e.__str__(), file=sys.stderr)
+		print(name + ' skipped, ' + e.__str__(), file=sys.stderr)
 		return
 
 	if retv.t0 <= 0 or retv.t0 > 5:
-		print(file + ' skipped, t0 = ' + str(retv.t0), file=sys.stderr)
+		print(name + ' skipped, t0 = ' + str(retv.t0), file=sys.stderr)
 		isValid = False
 
 	if retv.t0_error > 1:
-		print(file + ' skipped, t0_error = ' + str(retv.t0_error), file=sys.stderr)
+		print(name + ' skipped, t0_error = ' + str(retv.t0_error), file=sys.stderr)
 		isValid = False
 
 	if retv.x0_error > 1:
-		print(file + ' skipped, x0_error = ' + str(retv.x0_error), file=sys.stderr)
+		print(name + ' skipped, x0_error = ' + str(retv.x0_error), file=sys.stderr)
 		isValid = False
 
 	if retv.f_error > 1:
-		print(file + ' skipped, f_error = ' + str(retv.f_error), file=sys.stderr)
+		print(name + ' skipped, f_error = ' + str(retv.f_error), file=sys.stderr)
 		isValid = False
 
 	if isValid == True:
@@ -88,7 +110,8 @@ def process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot):
 			'{}'.format(len(raw_data.voltagesamples)), file=sys.stdout)
 	
 		# save analysis results
-		save_results(catalog, raw_data, retv)
+		if summary:
+			save_results(catalog, raw_data, retv)
 
 		# plot results
 		if plot:
@@ -96,4 +119,4 @@ def process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot):
 	else:
 		print('ERROR')
 
-process(base64Samples, sampleRate, adcStartTime, dataCatalog, plot)
+process(base64Samples, sampleRate, adcStartTime, dataCatalog, savePlot, saveRaw, saveSummary, saveError)

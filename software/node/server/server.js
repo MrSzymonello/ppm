@@ -19,7 +19,7 @@ app.post('/ppms', (req, res) => {
 
   // set request elements as arguments to the Python script
   var options = {
-    args: [req.body.samplerate, req.body.takenAt, 'data', 'False']
+    args: ['-p', '-r', '-s', req.body.samplerate, req.body.takenAt]
   };
 
   var pyshell = new PythonShell('..\\python\\ppm_server.py', options);
