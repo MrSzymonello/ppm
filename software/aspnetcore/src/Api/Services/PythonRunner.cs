@@ -23,7 +23,15 @@ namespace Api.Services
             ProcessStartInfo pythonProcess = new ProcessStartInfo()
             {
                 FileName = "python",
-                Arguments = $"{pythonScriptPath} -d {appOptions.Value.DataCatalog} {(appOptions.Value.CreatePlots ? "-p" : "")} -r -s {rawPPM.SampleRate.ToString().Replace(',','.')} {rawPPM.TakenAt.ToString().Replace(',','.')}",
+                Arguments = $"{pythonScriptPath} " +
+                            $"{(appOptions.Value.DataCatalog == null ? "" : "-d")} " +
+                            $"{appOptions.Value.DataCatalog} " +
+                            $"{(appOptions.Value.SavePlots ? "-p" : "")}  " +
+                            $"{(appOptions.Value.SaveRawFile ? "-r" : "")} " +
+                            $"{(appOptions.Value.SaveSummaryFile ? "-s" : "")}  " +
+                            $"{(appOptions.Value.SaveErrorFile ? "-e" : "")} " +
+                            $"{rawPPM.SampleRate.ToString().Replace(',','.')} " +
+                            $"{rawPPM.TakenAt.ToString().Replace(',','.')}",
                 UseShellExecute = false,
                 CreateNoWindow = true,
                 RedirectStandardInput = true,
