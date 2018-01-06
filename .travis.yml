@@ -7,9 +7,9 @@ branches:
   only:
     - master
 before_script:
-  - chmod -R a+x scripts
+  - chmod -R a+x software/aspnetcore/scripts
 script:
-  - ./scripts/travis-build.sh
+  - ./software/aspnetcore/scripts/travis-build.sh
 notifications:
   email:
     on_success: never

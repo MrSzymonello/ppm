@@ -1,4 +1,4 @@
 #!/bin/bash
-cd src/Api
+cd software/aspnetcore/src/Api
 dotnet restore
 dotnet build
