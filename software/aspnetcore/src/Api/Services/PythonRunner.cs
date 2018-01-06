@@ -22,7 +22,7 @@ namespace Api.Services
             string pythonScriptPath = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "ppm_server.py");
             ProcessStartInfo pythonProcess = new ProcessStartInfo()
             {
-                FileName = "python",
+                FileName = appOptions.Value.Path,
                 Arguments = $"{pythonScriptPath} " +
                             $"{(appOptions.Value.DataCatalog == null ? "" : "-d")} " +
                             $"{appOptions.Value.DataCatalog} " +

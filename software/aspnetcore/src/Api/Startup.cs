@@ -38,8 +38,11 @@ namespace Api
             services.AddScoped<IMongoService, MongoService>();
             services.AddScoped<IPythonRunner, PythonRunner>();
 
-            var mongoClient = new MongoClient("mongodb://localhost:27017");
-            var database = mongoClient.GetDatabase("TodoApp");
+            MongoSettings mongoSettings = new MongoSettings();
+            Configuration.GetSection("mongo").Bind(mongoSettings);
+            var mongoClient = new MongoClient(mongoSettings.ConnectionString);
+            Console.WriteLine(mongoSettings.ConnectionString);
+            var database = mongoClient.GetDatabase(mongoSettings.Database);
             services.AddScoped<IMongoDatabase>(_ => database);
 
             // Register the Swagger generator, defining one or more Swagger documents
