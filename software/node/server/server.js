@@ -13,7 +13,7 @@ const port = process.env.PORT;
 var server = http.createServer(app);
 app.use(bodyParser.json());
 
-app.post('/ppms', (req, res) => {
+app.post('/api/ppm', (req, res) => {
   
   var ppm;
 
@@ -34,20 +34,20 @@ app.post('/ppms', (req, res) => {
     var split = message.split('\t');
     if(split[0] === "OK") {
         ppm = new PPM({
-          b: parseFloat(split[1]),
-          fitFrequency: parseFloat(split[2]),
-          fftFrequency: parseFloat(split[3]),
-          t0: parseFloat(split[4]),
-          fftAmplitude: parseFloat(split[5]),
+          B: parseFloat(split[1]),
+          FitFrequency: parseFloat(split[2]),
+          FFTFrequency: parseFloat(split[3]),
+          T0: parseFloat(split[4]),
+          FFTAmplitude: parseFloat(split[5]),
           A: parseFloat(split[6]),
-          x0Error: parseFloat(split[7]),
-          fError: parseFloat(split[8]),
-          t0Error: parseFloat(split[9]),
+          X0Error: parseFloat(split[7]),
+          FError: parseFloat(split[8]),
+          T0Error: parseFloat(split[9]),
           AError: parseFloat(split[10]),
-          y0Error: parseFloat(split[11]),
-          takenAt: req.body.takenAt,
-          sampleRate: req.body.samplerate,
-          numberOfSamples: parseInt(split[12])
+          Y0Error: parseFloat(split[11]),
+          TakenAt: req.body.takenAt,
+          SampleRate: req.body.samplerate,
+          NumberOfSamples: parseInt(split[12])
         });
     }
   });

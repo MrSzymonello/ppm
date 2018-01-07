@@ -1,62 +1,64 @@
 var mongoose = require('mongoose');
-
-var PPM = mongoose.model('PPM', {
-  b: {
-    type: Number,
-    required: true
+var schema = new mongoose.Schema(
+  {
+    B: {
+      type: Number,
+      required: true
+    },
+    FitFrequency: {
+      type: Number,
+      required: true
+    },
+    FFTFrequency: {
+      type: Number,
+      required: true
+    },
+    FFTAmplitude: {
+      type: Number,
+      required: true
+    },
+    T0: {
+      type: Number,
+      required: true
+    },
+    A: {
+      type: Number,
+      required: true
+    },
+    X0Error: {
+      type: Number,
+      required: true
+    },
+    FError: {
+      type: Number,
+      required: true
+    },
+    T0Error: {
+      type: Number,
+      required: true
+    },
+    AError: {
+      type: Number,
+      required: true
+    },
+    Y0Error: {
+      type: Number,
+      required: true
+    },
+    TakenAt: {
+      type: Number,
+      required: true
+    },
+    SampleRate: {
+      type: Number,
+      required: true
+    },
+    NumberOfSamples: {
+      type: Number,
+      required: true
+    }
   },
-  fitFrequency: {
-	  type: Number,
-    required: true
-  },
-  fftFrequency: {
-	  type: Number,
-    required: true
-  },
-  fftAmplitude: {
-	  type: Number,
-    required: true
-  },
-  t0: {
-	  type: Number,
-    required: true
-  },
-  A: {
-	  type: Number,
-    required: true
-  },
-  x0Error: {
-	  type: Number,
-    required: true
-  },
-  fError: {
-	  type: Number,
-    required: true
-  },
-  t0Error: {
-	  type: Number,
-    required: true
-  },
-  AError: {
-	  type: Number,
-    required: true
-  },
-  y0Error: {
-	  type: Number,
-    required: true
-  },
-  takenAt: {
-    type: Number,
-    required: true
-  },
-  sampleRate: {
-    type: Number,
-    required: true
-  },
-  numberOfSamples: {
-    type: Number,
-    required: true
-  }
-});
+  { versionKey: false });
+var PPM = mongoose.model('PPM', schema);
 
 module.exports = {PPM};
