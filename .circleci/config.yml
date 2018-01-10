@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: mrszymonello/aspnetcore-build-python
+    steps:
+      - checkout
+      - run:
+          command: |
+            cd software/aspnetcore/src/Api
+            dotnet restore
+            dotnet build
+            cd ../../tests/Api.Tests
+            dotnet test

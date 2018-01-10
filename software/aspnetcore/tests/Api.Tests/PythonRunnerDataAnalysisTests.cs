@@ -21,6 +21,7 @@ namespace Tests
             // do not create any output files
             var options = Options.Create(new AppOptions()
             {
+                Path = "python3",
                 SavePlots = false,
                 SaveErrorFile = false,
                 SaveRawFile = false,
