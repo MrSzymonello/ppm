@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Api.Services;
 using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.Examples;
 
 namespace Api
 {
@@ -49,6 +50,7 @@ namespace Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "PPM API", Version = "v1" });
+                c.OperationFilter<ExamplesOperationFilter>(); // [SwaggerRequestExample] & [SwaggerResponseExample]
             });
         }
 

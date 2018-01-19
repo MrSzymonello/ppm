@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Api.Services;
+using Swashbuckle.AspNetCore.Examples;
 
 namespace Api.Controllers
 {
@@ -35,6 +36,7 @@ namespace Api.Controllers
 
         // POST api/ppm
         [HttpPost]
+        [SwaggerRequestExample(typeof(RawPPM), typeof(RawPPMExample))]
         public async Task<IActionResult> Post([FromBody]RawPPM value)
         {
             var results = await pythonRunner.ProcessRawData(value);
