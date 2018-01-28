@@ -52,6 +52,8 @@ namespace Api
                 c.SwaggerDoc("v1", new Info { Title = "PPM API", Version = "v1" });
                 c.OperationFilter<ExamplesOperationFilter>(); // [SwaggerRequestExample] & [SwaggerResponseExample]
             });
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +70,10 @@ namespace Api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "PPM API V1");
             });
+
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod()
+            );
 
             app.UseMvc();
         }

@@ -16,6 +16,7 @@
     <PackageReference Include="MongoDB.Driver" Version="2.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Examples" Version="2.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.1" />
   </ItemGroup>
 
   <ItemGroup>
