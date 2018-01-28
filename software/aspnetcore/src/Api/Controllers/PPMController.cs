@@ -34,6 +34,19 @@ namespace Api.Controllers
             else return NotFound();
         }
 
+        // GET api/ppm?limit={limit}
+        [HttpGet(Name = "GetLatest")]
+        public async Task<IActionResult> GetLatest([FromQuery] string limit)
+        {
+            int.TryParse(limit, out int howMany);
+            
+            var ppms = await mongoService.GetAll();
+            if(howMany < 1)
+                return Ok(ppms);
+            else            
+                return Ok(ppms.TakeLast(howMany));
+        }
+
         // POST api/ppm
         [HttpPost]
         [SwaggerRequestExample(typeof(RawPPM), typeof(RawPPMExample))]

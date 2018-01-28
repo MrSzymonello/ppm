@@ -29,6 +29,11 @@ namespace Api.Services
             return ppm;
         }
 
+        public async Task<List<ProcessedPPM>> GetAll()
+        {            
+            return await database.GetCollection<ProcessedPPM>("ppms").AsQueryable().ToListAsync();
+        }
+
         public async Task<ProcessedPPM> Create(ProcessedPPM ppm)
         {
             await database.GetCollection<ProcessedPPM>("ppms").InsertOneAsync(ppm);            
