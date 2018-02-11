@@ -5,10 +5,17 @@ jobs:
       - image: mrszymonello/aspnetcore-build-python
     steps:
       - checkout
-      - run:
-          command: |
-            cd software/aspnetcore/src/Api
-            dotnet restore
-            dotnet build
-            cd ../../tests/Api.Tests
-            dotnet test
+      - run: |
+          cd software/aspnetcore/src/Api
+          dotnet restore
+          dotnet build
+          cd ../../tests/Api.Tests
+          dotnet test
+          cd ../../src/Api
+          dotnet publish -c Release -o ./bin/Docker
+      # build and push Docker image
+      - setup_remote_docker      
+      - run: |
+          cd software/aspnetcore/src/Api
+          chmod a+x ../../scripts/docker-publish.sh
+          ../../scripts/docker-publish.sh
