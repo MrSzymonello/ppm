@@ -49,7 +49,7 @@ Python code for data processing and measurement process control.
 [ppm-microcontroller]  
 Code for the LPC1768 microcontroller embedded on the WB-Beemer development board.
 
-[iot-api-asp-net-core](https://github.com/MrSzymonello/iot-api-asp-net-core) [![CircleCI](https://circleci.com/gh/MrSzymonello/iot-api-asp-net-core.svg?style=shield)](https://circleci.com/gh/MrSzymonello/iot-api-asp-net-core) or [iot-api-node-js]  
+[iot-api-asp-net-core](https://github.com/MrSzymonello/iot-api-asp-net-core) [![CircleCI](https://circleci.com/gh/MrSzymonello/iot-api-asp-net-core.svg?style=shield)](https://circleci.com/gh/MrSzymonello/iot-api-asp-net-core)  
 REST API for data processing and storage in the cloud.
 
 [iot-web-app](https://github.com/MrSzymonello/iot-web-app) [![CircleCI](https://circleci.com/gh/MrSzymonello/iot-web-app.svg?style=shield)](https://circleci.com/gh/MrSzymonello/iot-web-app)  
